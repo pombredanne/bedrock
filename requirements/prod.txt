@@ -1,5 +1,5 @@
 # Django stuff
--e git://github.com/django/django@36c82ac8#egg=django
+-e git://github.com/django/django@1.3.1#egg=django
 
 # Templates
 -e git://github.com/jbalogh/jingo.git#egg=jingo
@@ -9,6 +9,7 @@ GitPython==0.1.7
 # Various tidbits
 -e git://github.com/jsocol/commonware.git#egg=commonware
 -e git://github.com/mozilla/nuggets.git#egg=nuggets
+-e git://github.com/kurtmckee/feedparser#egg=feedparser
 
 # Security
 -e git://github.com/fwenzel/django-sha2.git#egg=django-sha2
@@ -17,10 +18,14 @@ GitPython==0.1.7
 celery
 django-celery
 
+# bcrypt
+django-bcrypt
+
 # L10n
 Babel>=0.9.4
 -e git://github.com/clouserw/tower.git#egg=tower
 -e git://github.com/fwenzel/django-mozilla-product-details#egg=django-mozilla-product-details
 
-# Jobvite integration
--e git://github.com/mozilla/django-jobvite#egg=django_jobvite
+python-memcached==1.45
+
+django-statsd-mozilla==0.3.5

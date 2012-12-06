@@ -1,3 +1,7 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
 $(document).ready(function() {
   if ($('#nav-main').length === 0) {
     return;
@@ -6,11 +10,11 @@ $(document).ready(function() {
   var main_menuitems = $('#nav-main [tabindex="0"]');
   var prev_li, new_li, focused_item;
 
-  $('#nav-main [role="menubar"] > li').bind('mouseover focusin', function(event) {
+  $('#nav-main > .has-submenus > li').bind('mouseover focusin', function(event) {
     new_li = $(this);
     if (!prev_li || prev_li.attr('id') !== new_li.attr('id')) {
       // Open the menu
-      new_li.addClass('hover').find('[role="menu"]').attr('aria-expanded', 'true');
+      new_li.addClass('hover').find('[aria-expanded="false"]').attr('aria-expanded', 'true');
       if (prev_li) {
         // Close the last selected menu 
         prev_li.dequeue();
@@ -24,7 +28,7 @@ $(document).ready(function() {
       if (prev_li) {
         prev_li.clearQueue();
         // Close the menu
-        prev_li.removeClass('hover').find('[role="menu"]').attr('aria-expanded', 'false');
+        prev_li.removeClass('hover').find('[aria-expanded="true"]').attr('aria-expanded', 'false');
         prev_li = null;
         if (focused_item) {
           focused_item.get(0).blur();
@@ -32,7 +36,6 @@ $(document).ready(function() {
       }
     });
   }).each(function(menu_idx) {
-    var menu = $(this).find('[role="menu"]');
     var menuitems = $(this).find('a');
 
     menuitems.mouseover(function(event) {
@@ -43,6 +46,9 @@ $(document).ready(function() {
       // Enable keyboard navigation
       $(this).keydown(function(event) {
         var target;
+        if(event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
+          return true;
+        }
         switch (event.keyCode) {
           case 33: // Page Up
           case 36: // Home
@@ -81,4 +87,5 @@ $(document).ready(function() {
   // With JavaScript enabled, we can provide a full navigation with #nav-main.
   // Now "hide" the duplicated #footer-menu from AT.
   $('#footer-menu').attr('role', 'presentation');
+  
 });

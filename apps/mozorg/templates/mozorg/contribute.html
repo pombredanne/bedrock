@@ -1,0 +1,284 @@
+{# This Source Code Form is subject to the terms of the Mozilla Public
+ # License, v. 2.0. If a copy of the MPL was not distributed with this
+ # file, You can obtain one at http://mozilla.org/MPL/2.0/. #}
+
+{% extends "mozorg/base-resp.html" %}
+
+{% block page_title %}{{_('Get Involved: Volunteer Opportunities at Mozilla')}}{% endblock %}
+{% block body_id %}contribute{% endblock %}
+
+{% block extrahead %}
+  {{ css('contribute') }}
+{% endblock %}
+
+{% block js %}
+  {{ js('contribute') }}
+{% endblock %}
+
+{% block content %}
+
+<h1 id="main-feature" class="large">{{_('Get Involved')}}</h1>
+
+<section id="welcome" class="container">
+  <div id="welcome-video" class="mozilla-video-control mozilla-video-shadow">
+    <video
+      width="640"
+      height="360"
+      poster="/media/img/contribute/poster-brand.jpg"
+      controls="controls">
+      <source src="//videos-cdn.mozilla.net/brand/Mozilla_Firefox_Manifesto_v0.2_640.webm" type="video/webm" />
+      <source src="//videos-cdn.mozilla.net/brand/Mozilla_Firefox_Manifesto_v0.2_640.theora.ogv" type="video/ogg; codecs=&quot;theora, vorbis&quot;" />
+      <source src="//videos-cdn.mozilla.net/brand/Mozilla_Firefox_Manifesto_v0.2_640.mp4" type="video/mp4" />
+      <object type="application/x-shockwave-flash"
+        style="width: 640px; height: 388px;"
+        data="/media/flash/playerWithControls.swf?flv=brand/Mozilla_Firefox_Manifesto_v0.2_640.mp4&amp;autoplay=false&amp;msg=Play%20Video">
+        <param name="movie" value="/media/flash/playerWithControls.swf?flv=brand/Mozilla_Firefox_Manifesto_v0.2_640.mp4&amp;autoplay=false&amp;msg=Play%20Video" />
+        <param name="wmode" value="transparent" />
+
+        <div class="video-player-no-flash">
+        {{_('This video requires a browser with support for open video or the <a href="http://www.adobe.com/go/getflashplayer">Adobe Flash Player</a>.')}}
+        </div>
+      </object>
+    </video>
+  </div>
+  <p>
+    {{_('You don’t have to be a C++ guru (or even know what that means!) to get involved.<br><b>You just have to love the Web.</b>')}}
+  </p>
+</section>
+
+{% include "mozorg/contribute-form.html" %}
+
+  <section id="opportunities">
+
+    <h1 class="container">{{_('Find an opportunity')}}</h1>
+
+    <div class="pager pager-with-tabs">
+
+      <nav class="container">
+        <h5>{{_('Sort By:')}}</h5>
+        <ul class="pager-tabs">
+          <li><a href="#interest" class="button-white">{{_('Interest')}}</a></li>
+          <li><a href="#location" class="button-white">{{_('Location')}}</a></li>
+          {% if LANG.startswith('en') %}<li><a href="#newsletter" class="button-white">{{_('Newsletter')}}</a></li>{% endif %}
+        </ul>
+      </nav>
+
+      <div class="pager-content container">
+
+        <div class="interest-content default-page" id="interest">
+          <script>// <![CDATA[
+          document.getElementById('interest').id = 'page-interest';
+          // ]]></script>
+          <section>
+
+            <ul class="contribute-options">
+              <li class="row">
+                <img src="/media/img/contribute/sumo.png" alt="" />
+                <h3 id="support">{{_('Helping Users')}}</h3>
+                <div class="content">
+                  <p>
+{% trans fx_support_url='https://support.mozilla.org/kb/superheroes-wanted', tb_support_url='http://support.mozillamessaging.com/kb/superheroes-wanted' %}
+Our support process relies on enthusiastic contributors like you to help others get the most out of Mozilla products. Find out more about <a href="{{ fx_support_url }}">how to help Firefox users</a> and <a href="{{ tb_support_url }}">how to help Thunderbird users</a>.
+{% endtrans %}
+                  </p>
+                </div>
+              </li>
+              <li class="row">
+                <img src="/media/img/contribute/qmo.png" alt="" />
+                <h3 id="qa">{{_('Quality Assurance')}}</h3>
+                <div class="content">
+                  <p>
+{% trans qa_bugs_url='http://quality.mozilla.org/teams/desktop-firefox/', qa_web_url='http://quality.mozilla.org/teams/web-qa/', qa_url='http://quality.mozilla.org/' %}
+Quality assurance testing is one of the easiest ways to get started with Mozilla and is a great way to get familiar with our code and tools. Help us <a href="{{ qa_bugs_url }}">hunt down bugs</a> in Firefox, <a href="{{ qa_web_url }}">test Mozilla web sites</a> or learn more about <a href="http://quality.mozilla.org/">other testing opportunities</a>.
+{% endtrans %}
+                </p>
+                </div>
+              </li>
+              <li class="row">
+                <img src="/media/img/contribute/dinohead.png" alt="" />
+                <h3 id="coding">{{_('Coding')}}</h3>
+                <div class="content">
+                  <p>
+{% trans dev_intro_url='https://developer.mozilla.org/en/Introduction', what_url='http://www.whatcanidoformozilla.org/' %}
+<a href="{{ dev_intro_url }}">Developers can help</a> Mozilla by adding new features, making our technology smaller and faster and making development easier for others.  Tell us <a href="{{ what_url }}">your favorite programming language</a> and we'll find the project for you.
+{% endtrans %}
+                  </p>
+                </div>
+              </li>
+              <li class="row">
+                <img src="/media/img/contribute/firefox.png" alt="" />
+                <h3 id="marketing">{{_('Spread the Word')}}</h3>
+                <div class="content">
+                  <p>
+{% trans affiliates_url='https://affiliates.mozilla.org', marketing_url='https://wiki.mozilla.org/MarketingGuide' %}
+Help us spread the word about how Firefox and other Mozilla projects are building a better Internet. Share Firefox with the world by <a href="{{ affiliates_url }}">becoming an Affiliate</a> and then check out our <a href="{{ marketing_url }}">Marketing Guide</a> for more ways to get involved.
+{% endtrans %}
+                  </p>
+                </div>
+              </li>
+              <li class="row">
+                <img src="{{ media('/img/contribute/localization.png') }}" alt="" />
+                <h3 id="l10n">{{_('Localization') }}</h3>
+                <div class="content">
+                  <p>
+{% trans l10n_url='https://wiki.mozilla.org/L10n', l10n_web_url='https://wiki.mozilla.org/L10n:Web_parts' %}
+Get involved with Mozilla by making Firefox, Thunderbird and other projects <a href="{{ l10n_url }}">available in your language</a>. Also help us tell the world about how Mozilla is building a better Internet by <a href="{{ l10n_web_url }}">translating content</a> on our web sites.
+{% endtrans %}
+                  </p>
+                </div>
+              </li>
+              <li class="row">
+                <img src="{{ media('/img/contribute/web.png') }}" alt="" />
+                <h3 id="l10n">{{_('Web Development') }}</h3>
+                <div class="content">
+                  <p>
+{% trans webdev_url='https://wiki.mozilla.org/Webdev/GetInvolved', gaia_url='https://wiki.mozilla.org/Gaia/Hacking' %}
+Our web sites are open for web developers to hack on.  <a href="{{ webdev_url }}">Find a web site project</a> to get started on.  Your web skills can also be used to <a href="{{ gaia_url }}">help us build our new Firefox OS</a>.
+{% endtrans %}
+                  </p>
+                </div>
+              </li>
+              <li class="row">
+                <img src="{{ media('/img/contribute/addons.png') }}" alt="" />
+                <h3 id="addons">{{_('Add-ons') }}</h3>
+                <div class="content">
+                  <p>
+{% trans addons_url='https://addons.mozilla.org/developers/docs/getting-started', addons_wiki='https://wiki.mozilla.org/AMO:Editors/Applying' %}
+Mozilla products have a powerful extension system that allows you to make small tweaks or major additions.  Learn more about how to <a href="{{ addons_url }}">build an add-on</a>.  For experienced developers, find out how to <a href="{{ addons_wiki }}">become an AMO editor</a>.
+{% endtrans %}
+                  </p>
+                </div>
+              </li>
+              <li class="row">
+                <img src="{{ media('/img/contribute/creativecollective.png') }}" alt="" />
+                <h3 id="design">{{_('Visual Design') }}</h3>
+                <div class="content">
+                  <p>
+{% trans creative_url='https://blog.mozilla.org/creative/' %}
+We want to make it possible for artists to cover the web and people with designs inspired by Mozilla.   Check out the <a href="{{ creative_url }}">Creative team blog</a> for more information about how to take part.
+{% endtrans %}
+                  </p>
+                </div>
+              </li>
+              <li class="row">
+                <img src="{{ media('/img/contribute/mdn.png') }}" alt="" />
+                <h3 id="docs">{{_('Documentation and Writing') }}</h3>
+                <div class="content">
+                  <p>
+{% trans dev_url='https://developer.mozilla.org/docs/Project:How_to_Help' %}
+The Mozilla Developer Network is the hub for information about Mozilla technologies. Help <a href="{{ dev_url }}">make our documentation better</a> by writing new content, correcting existing material or translating content into new languages.
+{% endtrans %}
+                  </p>
+                </div>
+              </li>
+              <li class="row">
+                <img src="{{ media('/img/contribute/webmaker.png') }}" alt="" />
+                <h3 id="education">{{_('Education') }}</h3>
+                <div class="content">
+                  <p>
+{% trans moz_webmaker='https://webmaker.org/', webmaker='https://webmaker.org/events/' %}
+Help build a generation of webmakers by teaching others how the web works. <a href="{{ moz_webmaker }} ">Explore what the Mozilla Webmaker project is all about</a> or get started teaching others by <a href="{{ webmaker }}">setting up an event in your community today</a>.
+{% endtrans %}
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </section>
+        </div>
+
+        <div class="location-content" id="location">
+          <script>// <![CDATA[
+          document.getElementById('location').id = 'page-location';
+          // ]]></script>
+          <section>
+            <ul>
+              <li class="row">
+                <a href="/contribute/local/northamerica.html">
+                  <img src="/media/img/contribute/local/map-th-northamerica.png" alt="">
+                  <h3>{{_('US and Canada')}}</h3>
+                </a>
+              </li>
+              <li class="row">
+                <a href="/contribute/local/europe.html">
+                  <img src="/media/img/contribute/local/map-th-europe.png" alt="">
+                  <h3>{{_('Europe')}}</h3>
+                </a>
+              </li>
+              <li class="row">
+                <a href="/contribute/local/latinamerica.html">
+                  <img src="/media/img/contribute/local/map-th-latinamerica.png" alt="">
+                  <h3>{{_('Latin America')}}</h3>
+                </a>
+              </li>
+              <li class="row">
+                <a href="/contribute/local/africamideast.html">
+                  <img src="/media/img/contribute/local/map-th-africamideast.png" alt="">
+                  <h3>{{_('Africa and the Middle East')}}</h3>
+                </a>
+              </li>
+              <li class="row">
+                <a href="/contribute/local/asia.html">
+                  <img src="/media/img/contribute/local/map-th-asia.png" alt="">
+                  <h3>{{_('Asia and the South Pacific')}}</h3>
+                </a>
+              </li>
+              <li class="row">
+                <a href="/contribute/local/southpole.html">
+                  <img src="/media/img/contribute/local/map-th-southpole.png" alt="">
+                  <h3>{{_('Antarctica')}}</h3>
+                </a>
+              </li>
+            </ul>
+          </section>
+        </div>
+
+
+
+        {% if LANG.startswith('en') %}
+          <div class="newsletter-content" id="newsletter">
+            <script>// <![CDATA[
+            document.getElementById('newsletter').id = 'page-newsletter';
+            // ]]></script>
+            <section>
+              {% if not newsletter_success %}
+                <form action="#newsletter" method="post" id="newsletter-form">
+                  <input type="hidden" name="newsletter-form" value="Y" />
+                  <p>{{_('Sign up for a weekly newsletter that is full of community news and contribution opportunities.')}}</p>
+                  {% if newsletter_form.errors %}
+                    {{ newsletter_form.non_field_errors()|safe }}
+
+                    <ul class="errorlist">
+                      {% if newsletter_form.email.errors %}
+                      <li>{{_('Please enter a valid email address.')}}</li>
+                      {% endif %}
+
+                      {% if newsletter_form.privacy.errors %}
+                      <li>{{_('You must agree to the privacy policy.')}}</li>
+                      {% endif %}
+                    </ul>
+                  {% endif %}
+
+                  <div class="field field-email">{{ field_with_attrs(newsletter_form.email, placeholder=_('YOUR EMAIL HERE'))|safe }}</div>
+                  <div class="field field-country">{{ newsletter_form.country|safe }}</div>
+                  <div class="field field-format">{{ newsletter_form.fmt|safe }}</div>
+                  <div class="field field-privacy">{{ newsletter_form.privacy|safe }}</div>
+                  <div class="field field-submit"><input name="test-submit" type="submit" value="{{_('Subscribe')}}" class="button-blue" /></div>
+                  <small>{{_('We will only send you Mozilla-related information.')}}</small>
+                </form>
+              {% else %}
+              <h4>{{_('Thank you!')}}</h4>
+              {% endif %}
+            </section>
+          </div>
+        {% endif %}
+
+      </div>
+
+    </div>
+
+
+  </section>
+
+{% endblock %}
+
+{% block email_form %}{% endblock %}

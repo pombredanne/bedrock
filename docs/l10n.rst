@@ -1,3 +1,9 @@
+.. This Source Code Form is subject to the terms of the Mozilla Public
+.. License, v. 2.0. If a copy of the MPL was not distributed with this
+.. file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+.. _l10n:
+
 ============
 Localization
 ============
@@ -5,42 +11,159 @@ Localization
 The site is fully localizable. Localization files are not shipped with the code
 distribution, but are available on SVN::
 
-    git svn clone https://svn.mozilla.org/projects/mozilla.org-l10n/trunk/ locale
+    git svn clone https://svn.mozilla.org/projects/mozilla.com/trunk/locales/ locale
     # or
-    svn checkout https://svn.mozilla.org/projects/mozilla.org-l10n/trunk/ locale
+    svn checkout https://svn.mozilla.org/projects/mozilla.com/trunk/locales/ locale
+
+.lang files
+-----------
+
+Bedrock supports a workflow similar to gettext. You extract all the
+strings from the codebase, then merge them into each locale to get
+them translated.
+
+The files containing the strings are called ".lang files" and end with
+a ``.lang`` extension.
+
+To extract all the strings from the codebase, run:
+
+::
+
+    $ ./manage.py l10n_extract
+
+That will use gettext to get all the needed localizations from python
+and html files, and will convert the result into a bunch of .lang
+files inside ``locale/templates``. This directory represents the
+"reference" set of strings to be translated, and you are free to
+modify or split up .lang files here as needed (just make sure they are
+being referenced correctly, from the code, see
+:ref:`Which .lang file should it use? <which-lang>`).
+
+To merge new strings into locale directories, run:
+
+::
+
+    $ ./manage.py l10n_merge
+
+If you want to merge only specific locales, you can pass any number of
+them as arguments:
+
+::
+
+    $ ./manage.py l10n_merge fr de
 
 
-Jinja2 L10n blocks
+.. _using-lang:
+
+Translating with .lang files
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To translate a string from a .lang file, simply use the gettext interface.
+
+In a jinja2 template:
+
+::
+
+    <div>{{ _('Hello, how are you?') }}<div>
+
+    <div>{{ _('<a href="%s">Click here</a>')|format('http://mozilla.org/') }}</div>
+
+    <div>{{ _('<a href="%(url)s">Click here</a>')|format(url='http://mozilla.org/') }}</div>
+
+Note the usage of variable substitution in the latter examples. It is
+important not to hardcode URLs or other parameters in the string.
+jinja's `format` filter lets us apply variables outsite of the string.
+
+There's another way to translate content within jinja2 templates. If
+you need a big chunk of content translated, you can put it all inside
+a `trans` block.
+
+::
+
+    {% trans %}
+      <div>Hello, how are you</div>
+    {% endtrans %}
+
+    {% trans url='http://mozilla.org' %}
+      <div><a href="{{ url }}">Click here</a></div>
+    {% endtrans %}
+
+Note that it also allows variable substitution by passing variables
+into the block and using template variables to apply them.
+
+.. _which-lang:
+
+Which .lang file should it use?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Translated strings are split across several .lang files to make it
+easier to manage separate projects and pages. So how does the system
+know which one to use when translating a particular string?
+
+* All translations from Python files are put into main.lang. This
+  should be a very limited set of strings and most likely should be
+  available to all pages.
+* Templates always load in `main.lang`, `base.lang`, and `newsletter.lang`
+* Additionally, each template has its own .lang file, so a template at
+  `mozorg/firefox.html` would use the .lang file at
+  `<locale>/mozorg/firefox.lang`.
+* Templates can override which lang files are loaded. The above 3
+  global ones are always loaded, but instead of loading
+  `<locale>/mozorg/firefox.lang`, the template can specify a list of
+  additional lang files to load with a template block:
+
+::
+
+    {% add_lang_files "foo" "bar" %}
+
+That will make the page load `foo.lang` and `bar.lang` in addition to
+`main.lang`, `base.lang`, and `newsletter.lang`.
+
+When strings are extracted from a template, that are added to the
+template-specific .lang file. If the template explicitly specifies
+.lang files like above, it will add the strings to the first .lang
+file specified, so extracted strings from the above template would go
+into `foo.lang`.
+
+You can similarly specify extra lang files in your Python source as well.
+Simply add a module-level constant in the file named `LANG_FILES`. The
+value should be either a string, or a list of strings, similar to the
+`add_lang_files` tag above.
+
+::
+
+    # forms.py
+
+    from l10n_utils.dotlang import _
+
+    LANG_FILES = ['foo', 'bar']
+
+    sometext = _('Foo about bar.')
+
+This file's strings would be extracted to `foo.lang`, and the lang files
+`foo.lang`, `bar.lang`, `main.lang`, `base.lang`, and `newsletter.lang`
+would be searched for matches in that order.
+
+l10n blocks
 ------------------
 
-Bedrock uses a block-based translation system that divides templates (i.e., HTML
-pages in English (US)) into *localizable* and *unlocalizable* parts and ensures that
-only localizable content makes its way into the translatable files shown to
-localizers.
+Bedrock also has a block-based translation system that works like the
+``{% block %}`` template tag, and marks large sections of translatable
+content. This should not be used very often; lang files are the
+preferred way to translate content. However, there may be times when
+you want to control a large section of a page and customize it
+without caring very much about future updates to the English page.
 
-This greatly reduces the complexity of localizer-facing files, reduces the room
-for error and avoids unnecessary code duplication across various locales.
-
-.. figure:: images/l10n-blocks.jpg
-   :alt: L10n blocks example
-
-   This is an example of what parts of a page would be expressed as localizable
-   blocks.
-
-.. _Jinja2: http://jinja.pocoo.org/
-.. _template inheritance: http://jinja.pocoo.org/docs/templates/#template-inheritance
-
-
-A Localizers' guide to L10n blocks
+A Localizers' guide to l10n blocks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Let's look at how we would translate an example file from **English** to
 **German**.
 
 The English source template, created by a developer, lives under
-``apps/appname/templates/appname/example.html`` and looks like this:
+`apps/appname/templates/appname/example.html` and looks like this:
 
-.. code-block:: html
+.. code-block:: jinja
 
     {% extends "base.html" %}
 
@@ -58,29 +181,27 @@ The English source template, created by a developer, lives under
       {% endl10n %}
     {% endblock %}
 
-Notes:
+The ``l10n`` blocks mark content that should be localized.
+Realistically, the content in these blocks would be much larger. For a
+short string like above, please use lang files. We'll use this trivial
+code for our example though.
 
-#. ``extends`` and ``block`` are common `Jinja2`_ `template inheritance`_ idioms.
-   They mean there is a "base" template called ``base.html``. This example
-   template contains everything that ``base.html`` contains, however, the block
-   named *content* is overwritten by the content shown here.
-#. The *content* block contains an image and an ``hr`` tag, as well as two
-   ``l10n`` blocks. The l10n blocks mean, these parts are localizable.
-#. Every l10n block has a name that's unique to this file (here: "foo" and "bar")
-#. After the l10n block's name, the developer puts a *version number* (more
-   about that in the developer docs). By convention, this number is an ISO
-   date, in this case the 1st of August, 2011.
+The ``l10n`` blocks are named and tagged with a date (in ISO format).
+The date indicates the time that this content was updated and needs to
+be translated. If you are changing trivial things, you shouldn't
+update it. The point of l10n blocks is that localizers completely
+customize the content, so they don't care about small updates.
+However, you may add something important that needs to be added in the
+localized blocks; hence, you should update the date in that case.
 
-The developer now runs a script to **extract** the localizable parts of this template
-and put them into the localizers' **template folders**.
+When the command ``./manage.py l10n_extract`` is run, it generates
+the corresponding files in the ``locale`` folder (see below for more
+info on this command).
 
-The newly created file lives under ``locale/de/templates/appname/example.html``.
-Note that *de* is the German locale code, and *appname* and *example* match
-exactly the location of the English source file shown above.
+The german version of this template is created at
+``locale/de/templates/appname/example.html``. The contents of it are:
 
-Now what does the **German localizer** see?
-
-.. code-block:: html
+.. code-block:: jinja
 
     {% extends "appname/example.html" %}
 
@@ -92,39 +213,39 @@ Now what does the **German localizer** see?
     <p>This is an example!</p>
     {% endl10n %}
 
-Notes:
+This file is an actual template for the site. It extends the main
+template and contains a list of l10n blocks which override the content
+on the page.
 
-#. This template *extends* the en-US source version of the template. Once again,
-   this means all content is inherited from the "parent" file, except for the
-   blocks overwritten here.
-#. The file only contains the ``l10n`` blocks from the parent file -- the
-   unlocalizable parts are not copied to the German file.
-#. The names of the l10n blocks are the same as in the source file, but for
-   simplicity's sake, there are no version numbers next to each block name.
-#. The order of l10n blocks is the exact same as in the source file, as to
-   preserve context.
+The localizer just needs to translate the content in the l10n blocks.
 
-The localizer now edits the file and replaces the content of the l10n blocks
-with their own translation.
+When the reference template is updated with new content and the date
+is updated on an l10n block, the generated l10n file will simply add
+the new content. It will look like this:
 
-.. code-block:: html
+.. code-block:: jinja
 
     {% extends "appname/example.html" %}
 
     {% l10n foo %}
-    <h1>Hallo Welt!</h1>
+    <h1>This is an English string that needs translating.</h1>
+    {% was %}
+    <h1>Dies ist ein English string wurde nicht.</h1>
     {% endl10n %}
 
     {% l10n bar %}
-    <p>Dies ist ein Beispiel!</p>
+    <p>This is an example!</p>
     {% endl10n %}
 
-Done! The template engine will automatically use these translated blocks and
-put them into the source template in the appropriate places when rendering
-the German version of this page.
+Note the ``was`` block in ``foo``. The old translated content is in
+there, and the new content is above it. The ``was`` content is always
+shown on the site, so the old translation still shows up. The
+localizer needs to update the translated content and remove the ``was``
+block.
 
 Generating the locale files
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+::
 
     ./manage.py l10n_check
 
@@ -132,25 +253,7 @@ This command will check which blocks need to be translated and update
 the locale templates with needed translations. It will copy the
 English blocks into the locale files if a translation is needed.
 
-It uses the version of a block to determine if a translation is
-needed. You need to update this version (which is a date in the format
-YYYYMMDD) if you want it to be re-localized.
+You can specify a list of locales to update::
 
-New blocks will simply appear in english in the locale files. For
-example, in the German template, it will look like:
-
-    {% l10n foo %}
-    <h1>This is an English string that needs translating.</h1>
-    {% endl10n %}
-
-If there was a previous translation, it will be kept in the file so
-the the page will still display it:
-
-    {% l10n foo %}
-    <h1>This is an English string that needs translating.</h1>
-    {% else %}
-    <h1>Dies ist ein English string wurde nicht.</h1>
-    {% endl10n %}
-
-The localizer needs to translate the English string and remove the
-else block and previous translation.
+    ./mange.py l10n_check fr
+    ./mange.py l10n_check fr de es

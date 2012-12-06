@@ -1,0 +1,56 @@
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+@import "../styleguide/styleguide.less";
+
+/* {{{ Firefox - Branding  */
+
+.firefoxos-branding {
+    #intro {
+        float: left;
+        .divider;
+        h2 {
+            .span_guide(3);
+        }
+        p {
+            .span_guide(9);
+        }
+    }
+    #wordmark {
+        float: left;
+        .build {
+            .span_guide(3);
+        }
+        .logo {
+            .span_guide(6);
+            position: relative;
+            img {
+                background-color: #fff;
+                margin-bottom: 10px;
+                padding: 10px;
+            }
+            img.box-arrow {
+                background: none;
+                position: absolute;
+                top: 0;
+                left: -20px;
+            }
+        }
+        .download {
+            .span_guide(3);
+            span {
+                display: block;
+                font-size: 18px;
+            }
+            p {
+                margin-bottom: 0;
+            }
+        }
+        .button-sand, .button-sand:link, .button-sand:visited {
+            padding: 0 12px;
+        }
+    }
+}
+
+/* }}} */

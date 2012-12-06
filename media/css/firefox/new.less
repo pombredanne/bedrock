@@ -1,0 +1,255 @@
+// This Source Code Form is subject to the terms of the Mozilla Public
+// License, v. 2.0. If a copy of the MPL was not distributed with this
+// file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+@import "template-resp.less";
+
+.sky #outer-wrapper {
+    background: #fff;
+}
+
+#wrapper,
+.sky #wrapper {
+    background: #e04113 url(/media/img/firefox/new/bg.jpg) 50% 0 no-repeat;
+    width: 100%;
+}
+
+#masthead,
+#main-content,
+#colophon {
+    width: @widthDesktop - (@gridGutterWidth * 2.5);
+    margin: 0 auto;
+}
+
+#main-content {
+    padding-bottom: 0;
+    h1 {
+        color: #fff;
+        text-shadow: none;
+        font-size: 60px;
+        margin: (@baseLine * 5) 0 6px 0;
+        letter-spacing: -3px;
+    }
+}
+
+.download-button {
+    width: 300px;
+}
+
+ul#benefits {
+    padding: 4px 0 24px 12px;
+    margin: 0;
+    .clearfix;
+}
+
+ul#benefits li {
+    float: left;
+    display: inline;
+    list-style-type: none;
+    text-align: center;
+    margin: 0;
+    padding: 6px 24px 8px 24px;
+    line-height: 19px;
+    color: #fff;
+    border-left: 2px dotted #ffa800;
+    font-size: 18px;
+    font-style: italic;
+}
+
+ul#benefits li.first {
+    padding-left: 5px;
+    border-left: 0;
+}
+
+ul#benefits li span {
+    display: block;
+}
+
+
+.download-button small.download-other {
+    color: #ffcf72;
+    a:link,
+    a:visited {
+        color: #ffcf72;
+    }
+}
+
+#android-promo {
+    padding: 12px 0 0 20px;
+    width: 280px;
+    margin: 0;
+    color: #6D7581;
+    .open-sans;
+    font-size: 14px;
+}
+
+#android-promo a {
+    color: #fff;
+    background: rgb(240,78,40);
+    background: rgba(252,107,0,0.8);
+    background-image: url(/media/img/home/android-corner.png);
+    background-repeat: no-repeat;
+    background-position: 100% 100%;
+    border: 1px solid #dd3611;
+    -webkit-box-shadow: 0 0 0 1px rgba(255,255,255,0.1) inset;
+    -moz-box-shadow: 0 0 0 1px rgba(255,255,255,0.1) inset;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.1) inset;
+    display: block;
+    padding: 8px 36px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    text-align: left;
+}
+
+#android-promo a:hover,
+#android-promo a:active {
+    background-color: rgba(252,107,0,0.9);
+}
+
+#colophon {
+    padding-top: @baseLine;
+    text-align: center;
+    nav {
+        ul {
+            margin-bottom: @baseLine / 2;
+        }
+        li {
+            display: inline;
+            a,
+            a:link,
+            a:visited {
+                .inline-block;
+                .open-sans-light;
+                padding: 2px 12px;
+                border-left: 1px dotted @borderColor;
+                color: @textColorPrimary;
+            }
+            &:first-child a {
+                border: 0;
+            }
+        }
+        .primary {
+            font-family: @baseFontFamily;
+            font-size: @baseFontSize;
+            a:after {
+                content: " »";
+                color: #2983c8;
+            }
+        }
+        .secondary {
+            font-size: 11px;
+            a,
+            a:link,
+            a:visited {
+                color: @textColorLight;
+            }
+        }
+    }
+}
+
+/* Tablet Layout: 760px */
+@media only screen and (min-width: @breakTablet) and (max-width: @breakDesktop) {
+
+    #masthead,
+    #main-content,
+    #colophon {
+        width: @widthTablet - (@gridGutterWidth * 2);
+    }
+
+    #main-content {
+        h1 {
+            font-size: 48px;
+        }
+    }
+
+    ul#benefits li {
+        font-size: 15px;
+    }
+
+}
+
+/* Mobile layout: 320px */
+@media only screen and (max-width: @breakTablet) {
+
+    #wrapper,
+    .sky #wrapper {
+    }
+
+    #masthead,
+    #main-content,
+    #colophon {
+        width: @widthMobile - (@gridGutterWidth * 2);
+        margin: 0 auto;
+    }
+
+    #main-content {
+        h1 {
+            margin-top: @baseLine;
+            font-size: 32px;
+        }
+    }
+
+    .download-button {
+        width: 100%;
+    }
+
+    .download-button-large .download-link {
+        display: block;
+        min-width: 200px;
+    }
+
+    ul#benefits {
+        padding-left: 0;
+        li,
+        li.first {
+            display: block;
+            float: none;
+            border: 0;
+            text-align: inherit;
+            padding: 0;
+            margin: 5px 0;
+            span {
+                display: inline;
+            }
+        }
+    }
+
+    #android-promo {
+        display: none;
+    }
+
+    #colophon {
+        padding-top: @baseLine / 2;
+        nav ul.primary li {
+            display: block;
+            a,
+            a:link,
+            a:visited {
+                display: block;
+                text-align: left;
+                border-left: 0;
+                border-top: 1px dotted @borderColor;
+                padding: @baseLine / 2;
+            }
+            &:first-child {
+                a,
+                a:link,
+                a:visited {
+                    border: 0;
+               }
+            }
+        }
+    }
+}
+
+/* Wide mobile layout: 480px; */
+@media only screen and (min-width: @breakMobileLandscape) and (max-width: @breakTablet) {
+
+    #masthead,
+    #main-content,
+    #colophon {
+        width: @widthMobileLandscape - (@gridGutterWidth * 2);
+    }
+
+}
